@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Shift report breakdown (Sales)</title>
+
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,60 +14,171 @@
       transition: all 0.3s ease;
     }
 
-    h1 { margin-bottom: 30px; font-size: 28px; color: inherit; }
+    h1 {
+      margin-bottom: 25px;
+      font-size: 26px;
+    }
 
     input[type="file"], select, button {
-      margin-bottom: 15px;
-      padding: 8px 12px;
-      font-size: 14px;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      font-size: 13px;
       border-radius: 6px;
       border: 1px solid #555;
       background-color: #2c3e50;
       color: #ecf0f1;
-      transition: all 0.3s ease;
     }
 
-    label { margin-right: 10px; font-weight: bold; }
+    label {
+      margin-right: 10px;
+      font-weight: bold;
+      font-size: 13px;
+    }
 
-    button#clearCsv { background-color: #e74c3c; color: #fff; border: none; cursor: pointer; display: block; margin-top: 5px; }
-    button#clearCsv:hover { background-color: #c0392b; }
+    button#clearCsv {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+    }
 
-    button#toggleTheme { position: fixed; top: 20px; right: 20px; background-color: #16a085; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; z-index: 1000; transition: all 0.3s ease; }
-    button#toggleTheme:hover { background-color: #13876a; }
+    button#toggleTheme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #16a085;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 1000;
+    }
 
-    .table-section { margin-bottom: 50px; }
-    .table-section h2 { margin-top: 0; font-size: 20px; display: flex; align-items: center; color: inherit; }
-    .table-total { font-size: 20px; font-weight: bold; margin-left: 12px; color: #16a085; }
+    .table-section {
+      margin-bottom: 40px;
+    }
 
-    .table-container { overflow-x: auto; overflow-y: auto; max-height: 400px; background: #2c3e50; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); padding: 12px; border: 1px solid #555; transition: all 0.3s ease; }
+    .table-section h2 {
+      margin-top: 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
 
-    table { width: 100%; border-collapse: collapse; font-size: 14px; color: inherit; }
-    th, td { border: 1px solid #555; padding: 8px 10px; text-align: left; white-space: nowrap; }
-    th { background-color: #34495e; color: inherit; position: sticky; top: 0; z-index: 1; }
-    tr:nth-child(even) { background-color: #3c4a5a; }
-    tr.totals-row td { font-weight: bold; background-color: #1f2a36; position: sticky; top: 40px; z-index: 2; }
+    .table-total {
+      font-size: 18px;
+      font-weight: bold;
+      margin-left: 10px;
+      color: #16a085;
+    }
 
-    .export-btn { margin-top: 8px; padding: 6px 12px; background-color: #2980b9; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    .export-btn:hover { background-color: #1c5980; }
+    .table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 380px;
+      background: #2c3e50;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #555;
+      position: relative;
+    }
 
-    body.light-mode { background: #f4f4f4; color: #2c3e50; }
-    body.light-mode input[type="file"], body.light-mode select, body.light-mode button { background-color: #ecf0f1; color: #2c3e50; border: 1px solid #ccc; }
-    body.light-mode button#clearCsv { background-color: #e74c3c; color: #fff; }
-    body.light-mode button#clearCsv:hover { background-color: #c0392b; }
-    body.light-mode .table-container { background-color: #fff; border: 1px solid #ccc; }
-    body.light-mode th { background-color: #bdc3c7; color: #2c3e50; }
-    body.light-mode tr:nth-child(even) { background-color: #e1e5e8; }
-    body.light-mode tr.totals-row td { background-color: #d0d3d4; position: sticky; top: 40px; z-index: 2; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      border: 1px solid #555;
+      padding: 4px 6px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #34495e;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #3c4a5a;
+    }
+
+    /* Sticky totals row below the header with no top padding */
+    tr.totals-row td {
+      font-weight: bold;
+      background-color: #1f2a36;
+      position: sticky;
+      top: 26px; /* same as header height */
+      z-index: 1;
+      padding-top: 0;
+      padding-bottom: 4px; /* bottom padding for spacing */
+    }
+
+    .export-btn {
+      margin-top: 6px;
+      padding: 5px 10px;
+      background-color: #2980b9;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    /* LIGHT MODE */
+    body.light-mode {
+      background: #f4f4f4;
+      color: #2c3e50;
+    }
+
+    body.light-mode input[type="file"],
+    body.light-mode select,
+    body.light-mode button {
+      background-color: #ecf0f1;
+      color: #2c3e50;
+      border: 1px solid #ccc;
+    }
+
+    body.light-mode .table-container {
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+
+    body.light-mode th {
+      background-color: #bdc3c7;
+      color: #2c3e50;
+    }
+
+    body.light-mode tr:nth-child(even) {
+      background-color: #e1e5e8;
+    }
+
+    body.light-mode tr.totals-row td {
+      background-color: #d0d3d4;
+    }
   </style>
 </head>
+
 <body>
 
 <button id="toggleTheme">Toggle Light/Dark Mode</button>
+
 <h1>Shift report breakdown (Sales)</h1>
+
 <input type="file" id="csvFileInput" accept=".csv" />
 <button id="clearCsv">Clear CSV</button><br>
+
 <label for="staffFilter">Filter by Staff:</label>
-<select id="staffFilter" disabled><option value="">All Staff</option></select>
+<select id="staffFilter" disabled>
+  <option value="">All Staff</option>
+</select>
 
 <div class="table-section">
   <h2>Sales of the day<span id="salesOfDayGrandTotal" class="table-total"></span></h2>
@@ -93,9 +205,11 @@
 </div>
 
 <script>
-// Dark mode default
+// DARK MODE DEFAULT
 document.body.classList.remove('light-mode');
-document.getElementById('toggleTheme').onclick = () => { document.body.classList.toggle('light-mode'); };
+document.getElementById('toggleTheme').onclick = () => {
+  document.body.classList.toggle('light-mode');
+};
 
 let allRows = [];
 let staffColumnIndex, accountColumnIndex, typeColumnIndex, finalPriceColumnIndex;
@@ -104,6 +218,7 @@ let columnIndicesToSum = {};
 
 const csvFileInput = document.getElementById('csvFileInput');
 const staffFilter = document.getElementById('staffFilter');
+
 const totalSpans = {
   sales: document.getElementById('salesOfDayGrandTotal'),
   own: document.getElementById('uniqueAccountGrandTotal'),
@@ -111,6 +226,7 @@ const totalSpans = {
   void: document.getElementById('voidTableGrandTotal')
 };
 
+/* CSV PARSER */
 function parseCSV(text){
   const rows=[];
   let currentRow=[], currentValue='', insideQuotes=false;
@@ -121,38 +237,52 @@ function parseCSV(text){
     else if(char===',' && !insideQuotes){ currentRow.push(currentValue); currentValue=''; }
     else if((char==='\n' || char==='\r') && !insideQuotes){
       if(currentValue || currentRow.length){ currentRow.push(currentValue); rows.push(currentRow); currentRow=[]; currentValue=''; }
-    }
-    else currentValue+=char;
+    } else currentValue+=char;
   }
   if(currentValue || currentRow.length){ currentRow.push(currentValue); rows.push(currentRow); }
   return rows;
 }
 
+/* STAFF FILTER */
 function setupStaffFilter(rows){
   staffColumnIndex = rows[0].indexOf("Staff");
   if(staffColumnIndex===-1) return;
+
   const staffSet = new Set(rows.slice(1).map(r=>r[staffColumnIndex]).filter(v=>v));
   staffFilter.innerHTML='<option value="">All Staff</option>';
+
   Array.from(staffSet).sort().forEach(staff=>{
     const option=document.createElement('option');
-    option.value=staff; option.textContent=staff.replace(/\s*\([^)]*\)/g,'');
+    option.value=staff;
+    option.textContent=staff.replace(/\s*\([^)]*\)/g,'');
     staffFilter.appendChild(option);
   });
+
   staffFilter.disabled=false;
   staffFilter.onchange = ()=>renderAllTables(allRows);
 }
 
+/* TABLE RENDERING */
 function renderAllTables(rows){
   if(!rows.length) return;
+
   accountColumnIndex=rows[0].indexOf("Account");
   staffColumnIndex=rows[0].indexOf("Staff");
   typeColumnIndex=rows[0].indexOf("Type");
+
   columnIndicesToSum={};
-  columnsToDisplay.slice(1).forEach(col=>columnIndicesToSum[col]=rows[0].indexOf(col));
+  columnsToDisplay.slice(1).forEach(col=>{
+    columnIndicesToSum[col]=rows[0].indexOf(col);
+  });
+
   const selectedStaff = staffFilter.value;
+
   const displayAccounts = new Set(
-    selectedStaff ? rows.slice(1).filter(r=>r[staffColumnIndex]===selectedStaff && r[typeColumnIndex]?.trim().toUpperCase()!=='VOID').map(r=>r[accountColumnIndex])
-    : rows.slice(1).filter(r=>r[typeColumnIndex]?.trim().toUpperCase()!=='VOID').map(r=>r[accountColumnIndex])
+    selectedStaff
+      ? rows.slice(1).filter(r=>r[staffColumnIndex]===selectedStaff && r[typeColumnIndex]?.trim().toUpperCase()!=='VOID')
+          .map(r=>r[accountColumnIndex])
+      : rows.slice(1).filter(r=>r[typeColumnIndex]?.trim().toUpperCase()!=='VOID')
+          .map(r=>r[accountColumnIndex])
   );
 
   renderAggregatedGeneric(rows,'csvTableAggregated', r=>displayAccounts.has(r[accountColumnIndex]) && r[typeColumnIndex]?.trim().toUpperCase()!=='VOID', totalSpans.sales);
@@ -161,21 +291,23 @@ function renderAllTables(rows){
   renderVoidTable(rows, selectedStaff, totalSpans.void);
 }
 
+/* AGGREGATED TABLE */
 function renderAggregatedGeneric(rows, tableId, includeFn, totalSpan){
   const table=document.getElementById(tableId);
   table.innerHTML='';
+
   const accountMap=new Map();
   rows.slice(1).filter(includeFn).forEach(row=>{
-    const accountValue=row[accountColumnIndex];
-    if(!accountValue) return;
-    if(!accountMap.has(accountValue)){
-      accountMap.set(accountValue, {});
+    const account=row[accountColumnIndex];
+    if(!account) return;
+    if(!accountMap.has(account)){
+      accountMap.set(account,{});
       columnsToDisplay.slice(1).forEach(col=>{
         const idx=columnIndicesToSum[col];
-        accountMap.get(accountValue)[col]=idx!==-1?parseFloat(row[idx])||0:0;
+        accountMap.get(account)[col]=idx!==-1?parseFloat(row[idx])||0:0;
       });
     } else {
-      const obj=accountMap.get(accountValue);
+      const obj=accountMap.get(account);
       columnsToDisplay.slice(1).forEach(col=>{
         const idx=columnIndicesToSum[col];
         if(idx!==-1) obj[col]+=parseFloat(row[idx])||0;
@@ -185,106 +317,142 @@ function renderAggregatedGeneric(rows, tableId, includeFn, totalSpan){
 
   const thead=document.createElement('thead');
   const headerRow=document.createElement('tr');
-  columnsToDisplay.forEach(col=>{const th=document.createElement('th'); th.textContent=col; headerRow.appendChild(th);});
-  thead.appendChild(headerRow); table.appendChild(thead);
+  columnsToDisplay.forEach(col=>{
+    const th=document.createElement('th');
+    th.textContent=col;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
   const tbody=document.createElement('tbody');
+
   let grandTotals={FinalPrice:0, Discount:0, Loss:0, Comp:0, Charge:0};
 
-  // Totals row as second row
-  const totalsTr=document.createElement('tr'); totalsTr.classList.add('totals-row');
+  const totalsTr=document.createElement('tr');
+  totalsTr.classList.add('totals-row');
+
   columnsToDisplay.forEach(col=>{
     const td=document.createElement('td');
-    td.textContent=col==='Account'?'Totals':0;
+    td.textContent=col==='Account'?'Totals':'0';
     totalsTr.appendChild(td);
   });
+
   tbody.appendChild(totalsTr);
 
-  accountMap.forEach((values, accountValue)=>{
+  accountMap.forEach((vals, acc)=>{
     const tr=document.createElement('tr');
     columnsToDisplay.forEach(col=>{
       const td=document.createElement('td');
-      td.textContent=col==='Account'?accountValue:values[col].toFixed(2);
+      td.textContent=col==='Account'?acc:vals[col].toFixed(2);
       tr.appendChild(td);
-      if(col!=='Account') grandTotals[col]+=values[col];
+      if(col!=='Account') grandTotals[col]+=vals[col];
     });
     tbody.appendChild(tr);
   });
 
-  // Update totals row with correct sums
-  const totalsRow = tbody.querySelector('tr.totals-row');
-  columnsToDisplay.slice(1).forEach((col, idx)=>{ totalsRow.children[idx+1].textContent = grandTotals[col].toFixed(2); });
+  columnsToDisplay.slice(1).forEach((col,i)=>{
+    totalsTr.children[i+1].textContent=grandTotals[col].toFixed(2);
+  });
 
   table.appendChild(tbody);
   totalSpan.textContent=Object.values(grandTotals).reduce((a,b)=>a+b,0).toFixed(2);
 }
 
+/* VOID TABLE */
 function renderVoidTable(rows, selectedStaff, totalSpan){
-  if(!rows.length) return;
+  const table=document.getElementById('csvTableVoid');
+  table.innerHTML='';
+
   accountColumnIndex=rows[0].indexOf("Account");
   typeColumnIndex=rows[0].indexOf("Type");
   finalPriceColumnIndex=rows[0].indexOf("FinalPrice");
   staffColumnIndex=rows[0].indexOf("Staff");
-  if(accountColumnIndex===-1 || typeColumnIndex===-1 || finalPriceColumnIndex===-1) return;
 
-  const table=document.getElementById('csvTableVoid');
-  table.innerHTML='';
   const thead=document.createElement('thead');
   const headerRow=document.createElement('tr');
-  ['Account','FinalPrice'].forEach(text=>{const th=document.createElement('th'); th.textContent=text; headerRow.appendChild(th);});
-  thead.appendChild(headerRow); table.appendChild(thead);
+  ['Account','FinalPrice'].forEach(t=>{
+    const th=document.createElement('th');
+    th.textContent=t;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
   const tbody=document.createElement('tbody');
-  let grandTotal=0;
-  const voidMap=new Map();
-  rows.slice(1).forEach(row=>{
-    if(row[typeColumnIndex]?.trim().toUpperCase()!=='VOID') return;
-    if(selectedStaff && row[staffColumnIndex]!==selectedStaff) return;
-    const account=row[accountColumnIndex];
-    if(!account) return;
-    const finalPrice=parseFloat(row[finalPriceColumnIndex])||0;
-    voidMap.set(account,(voidMap.get(account)||0)+finalPrice);
-    grandTotal+=finalPrice;
+  let total=0;
+  const map=new Map();
+
+  rows.slice(1).forEach(r=>{
+    if(r[typeColumnIndex]?.trim().toUpperCase()!=='VOID') return;
+    if(selectedStaff && r[staffColumnIndex]!==selectedStaff) return;
+
+    const acc=r[accountColumnIndex];
+    const val=parseFloat(r[finalPriceColumnIndex])||0;
+    map.set(acc,(map.get(acc)||0)+val);
+    total+=val;
   });
 
-  const totalsTr=document.createElement('tr'); totalsTr.classList.add('totals-row');
-  ['Totals', grandTotal.toFixed(2)].forEach(text=>{const td=document.createElement('td'); td.textContent=text; totalsTr.appendChild(td);});
-  tbody.appendChild(totalsTr);
+  const totals=document.createElement('tr');
+  totals.classList.add('totals-row');
+  ['Totals',total.toFixed(2)].forEach(t=>{
+    const td=document.createElement('td');
+    td.textContent=t;
+    totals.appendChild(td);
+  });
+  tbody.appendChild(totals);
 
-  voidMap.forEach((val, account)=>{
+  map.forEach((v,a)=>{
     const tr=document.createElement('tr');
-    [account,val.toFixed(2)].forEach(text=>{const td=document.createElement('td'); td.textContent=text; tr.appendChild(td);});
+    [a,v.toFixed(2)].forEach(t=>{
+      const td=document.createElement('td');
+      td.textContent=t;
+      tr.appendChild(td);
+    });
     tbody.appendChild(tr);
   });
+
   table.appendChild(tbody);
-  totalSpan.textContent=grandTotal.toFixed(2);
+  totalSpan.textContent=total.toFixed(2);
 }
 
+/* EVENTS */
 csvFileInput.addEventListener('change', e=>{
   const file=e.target.files[0];
   if(!file) return;
+
   const reader=new FileReader();
-  reader.onload=ev=>{ allRows=parseCSV(ev.target.result); setupStaffFilter(allRows); renderAllTables(allRows); };
+  reader.onload=ev=>{
+    allRows=parseCSV(ev.target.result);
+    setupStaffFilter(allRows);
+    renderAllTables(allRows);
+  };
   reader.readAsText(file);
 });
 
 document.getElementById('clearCsv').onclick=()=>{
-  allRows=[]; csvFileInput.value='';
-  staffFilter.innerHTML='<option value="">All Staff</option>'; staffFilter.disabled=true;
-  ['csvTableAggregated','csvTable','csvTableExcludingStaff','csvTableVoid'].forEach(id=>document.getElementById(id).innerHTML='');
-  Object.values(totalSpans).forEach(span=>span.textContent='');
+  allRows=[];
+  csvFileInput.value='';
+  staffFilter.innerHTML='<option value="">All Staff</option>';
+  staffFilter.disabled=true;
+
+  ['csvTableAggregated','csvTable','csvTableExcludingStaff','csvTableVoid']
+    .forEach(id=>document.getElementById(id).innerHTML='');
+
+  Object.values(totalSpans).forEach(s=>s.textContent='');
 };
 
 function exportTableToCSV(tableId, filename){
   const table=document.getElementById(tableId);
-  const rows=Array.from(table.querySelectorAll('tr'));
-  const csv=rows.map(r=>Array.from(r.querySelectorAll('th,td')).map(c=>c.textContent).join(',')).join('\n');
+  const rows=[...table.querySelectorAll('tr')];
+  const csv=rows.map(r=>[...r.children].map(c=>c.textContent).join(',')).join('\n');
+
   const blob=new Blob([csv],{type:'text/csv'});
   const link=document.createElement('a');
   link.href=URL.createObjectURL(blob);
   link.download=filename;
   link.click();
-} 
+}
 </script>
 
 </body>
