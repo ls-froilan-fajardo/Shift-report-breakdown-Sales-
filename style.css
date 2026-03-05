@@ -1,0 +1,92 @@
+/* --- BASE STYLES --- */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1e1e1e;
+  color: #ecf0f1;
+  margin: 0;
+  padding: 0 20px 20px 20px;
+  transition: all 0.3s ease;
+}
+
+/* --- STICKY TOOLBAR ONLY --- */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #2c3e50;
+  padding: 10px 20px;
+  border-bottom: 1px solid #555;
+  flex-wrap: wrap;
+  
+  /* Sticky Logic */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin-bottom: 20px;
+}
+
+.top-bar h1 { margin: 0; font-size: 20px; margin-right: 10px; white-space: nowrap; color: #16a085; }
+.control-group { display: flex; align-items: center; gap: 8px; }
+.top-bar label { font-size: 12px; font-weight: bold; color: #bdc3c7; }
+
+/* --- UI ELEMENTS --- */
+input[type="file"], select, button {
+  padding: 5px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background-color: #34495e;
+  color: #ecf0f1;
+  cursor: pointer;
+}
+
+button#clearCsv { background-color: #e74c3c; border: none; }
+button#toggleTheme { background-color: #16a085; border: none; }
+
+/* --- TABLE STYLING --- */
+.table-section { margin-bottom: 30px; }
+.main-table-title { font-size: 22px; color: #16a085; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.table-section h2 { margin-top: 0; font-size: 16px; display: flex; align-items: center; color: #bdc3c7; }
+.table-total { font-size: 16px; font-weight: bold; margin-left: 10px; color: #2ecc71; }
+
+.table-container {
+  overflow: auto;
+  max-height: 500px;
+  background: #2c3e50;
+  border-radius: 6px;
+  border: 1px solid #555;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { border: 1px solid #555; padding: 6px; text-align: left; white-space: nowrap; }
+
+/* Table Headers: Standard scroll behavior */
+th { 
+  background-color: #34495e; 
+  text-align: center; 
+}
+
+tr:nth-child(even) { background-color: #3c4a5a; }
+
+/* GRAND TOTALS ROW: Darker Shading for both Sales and Payments */
+tr.totals-row td {
+  font-weight: bold;
+  background-color: #1a242f !important; /* Dark solid background */
+  color: #f1c40f; /* Gold text for clarity */
+}
+
+/* DATA CELLS: Solid background color */
+.highlight-col { background-color: #2c3e50 !important; }
+.group-divider { border-right: 2px solid #16a085 !important; }
+
+/* --- LIGHT MODE --- */
+body.light-mode { background: #f4f4f4; color: #2c3e50; }
+body.light-mode .top-bar { background: #fff; border-bottom: 1px solid #ccc; }
+body.light-mode input[type="file"], body.light-mode select, body.light-mode button { background-color: #ecf0f1; color: #2c3e50; border: 1px solid #ccc; }
+body.light-mode .table-container { background-color: #fff; border: 1px solid #ccc; }
+body.light-mode th { background-color: #bdc3c7; color: #2c3e50; }
+body.light-mode tr.totals-row td { background-color: #dcdde1 !important; color: #2c3e50; }
+body.light-mode tr:nth-child(even) { background-color: #e1e5e8; }
+body.light-mode .highlight-col { background-color: #e8ecef !important; }
+
+.export-btn { margin-top: 10px; background-color: #7f8c8d; border: none; color: white; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
