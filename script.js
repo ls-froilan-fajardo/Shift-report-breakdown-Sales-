@@ -20,7 +20,10 @@ const csvFileInput = document.getElementById('csvFileInput'),
       paymentsCsvInput = document.getElementById('paymentsCsvInput'), 
       staffFilter = document.getElementById('staffFilter');
       
-const totalSpans = { ownPlusVoids: document.getElementById('ownPlusVoidsTotal') };
+const totalSpans = { 
+  ownPlusVoids: document.getElementById('ownPlusVoidsTotal'),
+  paymentsOfTheDay: document.getElementById('paymentsOfTheDayTotal')
+};
 
 // UTILS
 function formatNumber(num) { return (!num || num === 0) ? "" : num.toFixed(2); }
@@ -112,12 +115,10 @@ function renderCombinedTable(rows, extraPay) {
 
   // 2. Scan Payments for staff accounts
   if (extraPay && extraPay.length > 1) {
-    const pAccIdx = extraPay[0].indexOf("Account"), pStaffIdx = extraPay[0].indexOf("Staff"), pTypeIdx = extraPay[0].indexOf("Type");
-    const excludedTypes = ["TRANSITORY_COMP", "TRANSITORY_OPEN", "TRANSITORY_CLOSE"];
+    const pAccIdx = extraPay[0].indexOf("Account"), pStaffIdx = extraPay[0].indexOf("Staff");
     extraPay.slice(1).forEach(pr => {
       const pAcc = (pr[pAccIdx] || "").trim();
-      const pType = (pr[pTypeIdx] || "").trim();
-      if (pAcc && !excludedTypes.includes(pType)) {
+      if (pAcc) {
         if (!selectedStaff || pr[pStaffIdx] === selectedStaff) visibleAccounts.add(pAcc);
       }
     });
@@ -172,7 +173,6 @@ function renderCombinedTable(rows, extraPay) {
   });
 
   if (totalSpans.ownPlusVoids) {
-    // Total Sales after Voids, Discount, and Comp logic
     totalSpans.ownPlusVoids.textContent = selectedStaff ? formatNumber(ownT + vT - (ownCompT + ownDiscT)) : "";
   }
 
@@ -256,6 +256,8 @@ function renderPaymentsTable(rows, masterAccs) {
 
   const accCol = rows[0].indexOf("Account"), amtCol = rows[0].indexOf("Amount"), tipCol = rows[0].indexOf("Tip"), paidCol = rows[0].indexOf("Paid"), staffCol = rows[0].indexOf("Staff"), typeCol = rows[0].indexOf("Type");
   const selected = staffFilter.value, ownMap = new Map(), othersMap = new Map();
+  
+  // EXCLUSION LIST FOR OWN PAYMENTS ONLY
   const excludedTypes = ["TRANSITORY_COMP", "TRANSITORY_OPEN", "TRANSITORY_CLOSE"];
 
   Array.from(masterAccs).sort().forEach(acc => { 
@@ -263,22 +265,30 @@ function renderPaymentsTable(rows, masterAccs) {
   });
 
   rows.slice(1).forEach(r => {
-    const typeVal = (r[typeCol] || "").trim();
-    if (excludedTypes.includes(typeVal)) return; // Exclude transitory rows
-
     const acc = (r[accCol] || "").trim();
     if (!acc || !ownMap.has(acc)) return;
 
+    const typeVal = (r[typeCol] || "").trim();
+    const isTransitory = excludedTypes.includes(typeVal);
+
     const amt = parseFloat(r[amtCol]) || 0, tip = tipCol !== -1 ? parseFloat(r[tipCol]) || 0 : 0, paid = paidCol !== -1 ? parseFloat(r[paidCol]) || 0 : 0;
     const isOwn = !selected || (staffCol !== -1 && r[staffCol] === selected);
-    const target = isOwn ? ownMap : othersMap; const data = target.get(acc);
-    data.a += amt; data.t += tip; data.p += paid;
+
+    if (isOwn) {
+      // If it belongs to the Own Payments group, skip the Transitory types
+      if (!isTransitory) {
+        const data = ownMap.get(acc);
+        data.a += amt; data.t += tip; data.p += paid;
+      }
+    } else {
+      // If it belongs to Payments by others, include everything (even Transitory types)
+      const data = othersMap.get(acc);
+      data.a += amt; data.t += tip; data.p += paid;
+    }
   });
 
   const thead = document.createElement('thead'), hr1 = document.createElement('tr'), thA = document.createElement('th');
   thA.textContent = 'Account'; thA.rowSpan = 2; hr1.appendChild(thA);
-  
-  // Excluded totals right beside "Own Payments" and "Payments by others" headers
   const grps = [{ name: 'Own Payments' }, { name: 'Payments by others' }];
   grps.forEach(g => { const th = document.createElement('th'); th.textContent = g.name; th.colSpan = 3; hr1.appendChild(th); });
   thead.appendChild(hr1);
@@ -298,6 +308,12 @@ function renderPaymentsTable(rows, masterAccs) {
     totals.oA += o.a; totals.oT += o.t; totals.oP += o.p;
     totals.tA += t.a; totals.tT += t.t; totals.tP += t.p;
   });
+
+  // Calculate "Payments of the day" total header
+  if (totalSpans.paymentsOfTheDay) {
+    totalSpans.paymentsOfTheDay.textContent = formatNumber(totals.oA + totals.tA);
+  }
+
   [totals.oA, totals.oT, totals.oP, totals.tA, totals.tT, totals.tP].forEach((v, i) => {
     const td = document.createElement('td'); td.textContent = formatNumber(v); if (i === 2) td.classList.add('group-divider'); tTr.appendChild(td);
   });
