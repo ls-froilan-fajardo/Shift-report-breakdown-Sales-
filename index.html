@@ -11,7 +11,7 @@
   <div class="top-bar">
     <div style="display: flex; align-items: center; gap: 10px;">
       <h1>Shift report</h1>
-      <span id="helpIcon" class="help-icon">?</span>
+      <span id="helpIcon" class="help-icon" title="View Instructions">?</span>
     </div>
     
     <div class="control-group">
@@ -42,7 +42,7 @@
       <hr>
       <ol>
         <li><strong>Upload Line Transactions:</strong> Select your "Line Transaction" CSV file. This contains all itemized sales, discounts, and voids.</li>
-        <li><strong>Upload Payments:</strong> Select your "Payments" CSV file. Note: Transitory types (OPEN, CLOSE, COMP) are automatically excluded.</li>
+        <li><strong>Upload Payments:</strong> Select your "Payments" CSV file.</li>
         <li><strong>Filter by Staff:</strong> Once both files are uploaded, use the Staff dropdown to isolate a specific person's performance.</li>
         <li><strong>Analyze Data:</strong>
           <ul>
@@ -66,6 +66,7 @@
 
   <div id="paymentsSection" class="table-section" style="display: none;">
     <h2 class="main-table-title">Payments</h2>
+    <h2>Payments of the day<span id="paymentsOfTheDayTotal" class="table-total"></span></h2>
     <div class="table-container">
       <table id="csvTablePayments"></table>
     </div>
